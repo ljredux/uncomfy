@@ -4,7 +4,7 @@
 
 // Minimal cross-platform C rewrite in progress...
 
-const char* get_basename(const char *argv0) {
+const char *get_basename(const char *argv0) {
     const char *name = strrchr(argv0, '/');
 #ifdef _WIN32
     if (!name) name = strrchr(argv0, '\\');
@@ -28,8 +28,8 @@ int main(int argc, char *argv[]) {
         show_usage(argv[0]);
         return 1;
     }
-    
+
     // TODO: write the actual program (minor detail)
-    
+
     return 0;
 }
