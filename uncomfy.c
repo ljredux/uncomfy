@@ -1,6 +1,8 @@
+#include "comfy_meta.h"
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <stdlib.h>
 
 // Minimal cross-platform C rewrite in progress...
 
@@ -29,7 +31,12 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    // TODO: write the actual program (minor detail)
+    char *metadata = get_metadata(argv[1], "workflow");
+    if (metadata) {
+        printf("%s\n", metadata);
+        free(metadata);
+    }
+    // TODO: finish the program 😏
 
     return 0;
 }
