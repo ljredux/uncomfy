@@ -31,12 +31,19 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    char *metadata = get_metadata(argv[1], "workflow");
+    // Open file & grab required metadata
+    FILE *fp = fopen(argv[1], "rb");
+    if (!fp) {
+        perror("fopen");
+        return 1;
+    }
+
+    char *metadata = get_metadata(fp, "workflow");
     if (metadata) {
         printf("%s\n", metadata);
         free(metadata);
     }
-    // TODO: finish the program 😏
+    fclose(fp);
 
     return 0;
 }

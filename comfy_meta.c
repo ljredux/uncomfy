@@ -1,7 +1,6 @@
 #include "comfy_meta.h"
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
 
 static bool is_png(FILE *fp);
@@ -9,8 +8,7 @@ static char *extract_from_png(FILE *fp, const char *key);
 static char *extract_from_mp4(FILE *fp, const char *key);
 
 // Main public function
-char *get_metadata(const char *filename, const char *key) {
-    FILE *fp = fopen(filename, "rb");
+char *get_metadata(FILE *fp, const char *key) {
     if (!fp) return NULL;
 
     char *result = NULL;
@@ -23,7 +21,6 @@ char *get_metadata(const char *filename, const char *key) {
         result = extract_from_mp4(fp, key);
     }
 
-    fclose(fp);
     return result;
 }
 

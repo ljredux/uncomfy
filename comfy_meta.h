@@ -5,6 +5,6 @@
 
 // Public function: extract metadata associated with a key in a comfyUI generated file
 // Returns dynamically allocated string (free this!) or NULL if not found
-char *get_metadata(const char *filename, const char *key);
+char *get_metadata(FILE *fp, const char *key);
 
 #endif
