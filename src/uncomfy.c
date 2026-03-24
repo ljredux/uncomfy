@@ -4,8 +4,16 @@
 #include <string.h>
 #include <sys/stat.h>
 
-const char *get_basename(const char *argv0);
+#ifdef _WIN32
+#define PATH_SEP "\\"
+#else
+#define PATH_SEP "/"
+#endif
+
 void show_usage(const char *argv0);
+const char *get_basename(const char *argv0);
+void get_workflows_path(char *out, size_t size);
+void join_path(char *out, size_t size, const char *a, const char *b);
 
 int main(int argc, char *argv[]) {
     if (argc != 2) {
@@ -40,14 +48,11 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
-const char *get_basename(const char *argv0) {
-    const char *name = strrchr(argv0, '/');
-#ifdef _WIN32
-    if (!name) name = strrchr(argv0, '\\');
-#endif
-    return name ? name + 1 : argv0;
-}
-
 void show_usage(const char *argv0) {
     printf("Usage: %s <file>\n", get_basename(argv0));
+}
+
+const char *get_basename(const char *argv0) {
+    const char *name = strrchr(argv0, PATH_SEP[0]);
+    return name ? name + 1 : argv0;
 }
