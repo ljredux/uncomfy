@@ -11,6 +11,8 @@
 #endif
 
 void show_usage(const char *argv0);
+int dir_exists(const char *path);
+int file_exists(const char *path);
 const char *get_basename(const char *argv0);
 void get_workflows_path(char *out, size_t size);
 void join_path(char *out, size_t size, const char *a, const char *b);
@@ -21,8 +23,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
-    struct stat st;
-    if (stat(argv[1], &st) != 0 || !S_ISREG(st.st_mode)) {
+    if (!file_exists(argv[1])) {
         printf("Error: File '%s' does not exist or is not a regular file.\n", argv[1]);
         show_usage(argv[0]);
         return 1;
@@ -52,6 +53,16 @@ void show_usage(const char *argv0) {
     printf("Usage: %s <file>\n", get_basename(argv0));
 }
 
+int dir_exists(const char *path) {
+    struct stat st;
+    return stat(path, &st) == 0 && S_ISDIR(st.st_mode);
+}
+
+int file_exists(const char *path) {
+    struct stat st;
+    return stat(path, &st) == 0 && S_ISREG(st.st_mode);
+}
+
 const char *get_basename(const char *argv0) {
     const char *name = strrchr(argv0, PATH_SEP[0]);
     return name ? name + 1 : argv0;
@@ -68,6 +79,13 @@ void get_workflows_path(char *out, size_t size) {
     join_path(tmp, sizeof(tmp), base, "user");
     join_path(tmp, sizeof(tmp), tmp, "default");
     join_path(out, size, tmp, "workflows");
+
+    if (!dir_exists(tmp)) {
+        out[0] = '\0';
+        return;
+    }
+
+    join_path(out, size, tmp, "");
 }
 
 // Safely join two path components
