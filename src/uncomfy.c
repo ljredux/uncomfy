@@ -56,3 +56,29 @@ const char *get_basename(const char *argv0) {
     const char *name = strrchr(argv0, PATH_SEP[0]);
     return name ? name + 1 : argv0;
 }
+
+void get_workflows_path(char *out, size_t size) {
+    const char *base = getenv("COMFYUI_PATH");
+    if (!base) {
+        out[0] = '\0';
+        return;
+    }
+
+    char tmp[512];
+    join_path(tmp, sizeof(tmp), base, "user");
+    join_path(tmp, sizeof(tmp), tmp, "default");
+    join_path(out, size, tmp, "workflows");
+}
+
+// Safely join two path components
+void join_path(char *out, size_t size, const char *a, const char *b) {
+    size_t len = strlen(a);
+
+    snprintf(out, size, "%s", a);
+
+    if (len > 0 && a[len - 1] != PATH_SEP[0]) {
+        strncat(out, PATH_SEP, size - strlen(out) - 1);
+    }
+
+    strncat(out, b, size - strlen(out) - 1);
+}
