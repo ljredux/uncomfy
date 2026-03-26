@@ -1,32 +1,33 @@
-# Get-ComfyWF
+# uncomfy
 
 Extract a workflow from an existing ComfyUI image or video and save it as a JSON workflow file that can be reopened in ComfyUI. Only likely to work with png and mp4 files saved via ComfyUI's native *Save Image* and *Save Video* nodes.
 
-Very much a work in progress, written for my own benefit while tweaking prompts and juggling output files. Powershell for now. Python later.
+This standalone executable has *no* dependencies. Make it available system-wide by adding it to your PATH.
+
+The original Powershell version is still available in /ps for anyone who prefers it (see its README).
 
 ## Usage
 
-```powershell
-.\Get-ComfyWF.ps1 "file.png"
+```bat
+uncomfy.exe <file>
 ```
 
 ## Output
 
 Saves a JSON file containing the extracted workflow
 
-When the COMFYUI_PATH environment variable is defined, the file is saved to your ComfyUI workflows folder. If it is not defined, the file is saved to the current folder.
+* If the COMFYUI_PATH environment variable is set, the file is saved to your ComfyUI workflows folder.
+* If not set, the file is saved to the current directory.
 
-## Requirements
+## Building
 
-* [ImageMagick](https://imagemagick.org) for processing images (`magick.exe` must be in your PATH).
-* [FFmpeg](https://www.ffmpeg.org) for processing videos (`ffprobe.exe` must be in your PATH).
+### Windows (MSYS2 / MinGW)
 
-You can install them via winget (recommended, as it sets up PATH automatically):
-
-```powershell
-winget install ImageMagick.ImageMagick
-winget install Gyan.FFmpeg
+```bat
+gcc src/*.c -o uncomfy.exe -O2 -s -ffunction-sections -fdata-sections -fno-asynchronous-unwind-tables -fno-unwind-tables -fomit-frame-pointer -Wl,--gc-sections
 ```
+
+This is optimised for both size *and* speed.
 
 ## License
 
