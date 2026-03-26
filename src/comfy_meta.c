@@ -6,7 +6,7 @@
 
 static bool is_png(FILE *fp);
 static uint32_t read_be32(FILE *fp);
-static char *extract_from_png(FILE *fp, const char *key);
+static char *read_png_tEXt_chunk(FILE *fp, const char *key);
 static char *extract_from_mp4(FILE *fp, const char *key);
 
 // Main public function
@@ -16,7 +16,7 @@ char *get_metadata(FILE *fp, const char *key) {
     char *result = NULL;
 
     if (is_png(fp)) {
-        result = extract_from_png(fp, key);
+        result = read_png_tEXt_chunk(fp, key);
     } else {
         // Assume MP4
         rewind(fp);
@@ -51,9 +51,9 @@ static uint32_t read_be32(FILE *fp) {
     return (b[0] << 24) | (b[1] << 16) | (b[2] << 8) | b[3];
 }
 
-// key: the keyword to search for in the PNG's tEXt chunks
-// Returns the text value (allocated string) if found, or NULL
-static char *extract_from_png(FILE *fp, const char *key) {
+// Returns the value of a PNG tEXt chunk matching the given key or null if not found.
+// The returned string must be freed.
+static char *read_png_tEXt_chunk(FILE *fp, const char *key) {
     fseek(fp, 8, SEEK_SET); // Skip PNG signature
 
     while (1) {
